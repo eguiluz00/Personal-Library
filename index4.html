@@ -1,0 +1,555 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <style>
+        body {
+            zoom: 80%;
+        }
+    </style>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Personal Library</title>
+    <style>
+        body {
+            font-family: 'Roboto', sans-serif;
+            line-height: 1.6;
+            color: #333;
+            background-color: #f9f9f9;
+            margin: 0;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+
+        .container {
+            max-width: 1200px;
+            margin: 0 auto;
+            padding: 20px;
+        }
+
+        .hero {
+            text-align: center;
+            padding: 50px;
+            background-color: #e5e5e5;
+        }
+
+        .hero-content h1 {
+            font-family: 'Playfair Display', serif;
+            font-size: 3rem;
+            margin: 0;
+        }
+
+        .library {
+            margin-top: 20px;
+        }
+
+        .category {
+            margin-bottom: 40px;
+        }
+
+        .category h2 {
+            font-family: 'Playfair Display', serif;
+            margin-bottom: 20px;
+        }
+
+        .book-grid {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 20px;
+        }
+
+        .book {
+            background: #fff;
+            padding: 10px;
+            border-radius: 8px;
+            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+            position: relative;
+            cursor: pointer;
+            overflow: hidden;
+        }
+
+        .book:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 12px 24px rgba(0, 0, 0, 0.2);
+        }
+
+        .book img {
+            width: 100px;
+            height: 100%;
+            object-fit: cover;
+            margin-right: 20px;
+            border-radius: 5px;
+        }
+
+        .book-content {
+            display: flex;
+            align-items: center;
+        }
+
+        .dropdown {
+            display: none;
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: calc(100% - 40px);
+            height: calc(100% - 40px);
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 6px 12px rgba(0, 0, 0, 0.3);
+            color: #444;
+            z-index: 20;
+            word-wrap: break-word;
+            overflow-wrap: break-word;
+            white-space: normal;
+            hyphens: auto;
+            text-align: center;
+            opacity: 0.6;
+        }
+
+        .book:hover .dropdown {
+            display: block;
+            opacity: 1;
+        }
+
+        .dropdown p {
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-bottom: 5px;
+        }
+
+        .rating {
+            margin-top: 0;
+        }
+
+        .star {
+            font-size: 1.7rem;
+            color: #ffcc00;
+            font-weight: bold;
+            stroke: #000;
+            stroke-width: 0.5;
+        }
+
+        .rating-value {
+            font-weight: bold;
+            margin-left: 5px;
+            color: #000;
+        }
+
+        .footer {
+            text-align: center;
+            padding: 20px;
+            background-color: #333;
+            color: #fff;
+            margin-top: 40px;
+        }
+    </style>
+</head>
+<body>
+    <!-- Sección Principal -->
+    <header class="hero">
+        <div class="hero-content">
+            <h1>My Personal Library</h1>
+            <p>Esta es mi biblioteca. Me gusta aprender sobre filosofía, historia, psicología y finanzas. Autor: Julen.</p>
+        </div>
+    </header>
+
+    <!-- Sección de Libros -->
+    <section class="library">
+        <div class="container" id="books-container">
+            <!-- Los libros serán cargados aquí dinámicamente desde el objeto JSON -->
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="footer">
+        <p>&copy; 2024 My Personal Library. Todos los derechos reservados.</p>
+    </footer>
+
+    <script>
+        document.addEventListener("DOMContentLoaded", loadBooks);
+
+        function loadBooks() {
+            const data = {
+                "categories": [
+                    {
+                        "name": "Finance",
+                        "books": [
+                            {
+                                "title": "Valuation: Measuring and Managing the Value of Companies",
+                                "author": "McKinsey & Company",
+                                "year": 2020,
+                                "description": "Comprehensive understanding of a company's value with multiple techniques: DCF, Multiples, Sum of Components. Key random insight: Ensuring an efficient capital allocation requires maximum financial leverage (all in) when ROIC>Cost of capital.",
+                                "rating": 4,
+                                "image": "pictures/valuation.jpg"
+                            },
+                            {
+                                "title": "Fooled by Randomness",
+                                "author": "Nassim Taleb",
+                                "year": 2001,
+                                "description": "We humans see patterns all over the place. But correlation does not imply causation.",
+                                "rating": 4,
+                                "image": "pictures/fooled_by_randomness.jpg"
+                            },
+                            {
+                                "title": "The Black Swan",
+                                "author": "Nassim Taleb",
+                                "year": 2007,
+                                "description": "Black Swan events will shake the world in an increasingly interconnected environment (we live in extremistan). Unpredictable and high-impact events become more significant due to the complexity of modern systems.",
+                                "rating": 5,
+                                "image": "pictures/the_black_swan.jpg"
+                            },
+                            {
+                                "title": "The Bed of Procrustes",
+                                "author": "Nassim Taleb",
+                                "year": 2010,
+                                "description": "Aphorisms for daily life (only for Taleb enthusiasts).",
+                                "rating": 3,
+                                "image": "pictures/the_bed_of_procrustes.jpg"
+                            },
+                            {
+                                "title": "Antifragile",
+                                "author": "Nassim Taleb",
+                                "year": 2012,
+                                "description": "Given that Black Swan events happen, let´s get ready. Because antifragile systems will not only survive, but improve.",
+                                "rating": 5,
+                                "image": "pictures/antifragile.jpg"
+                            },
+                            {
+                                "title": "Skin in the Game",
+                                "author": "Nassim Taleb",
+                                "year": 2018,
+                                "description": "The only valid answer to decision making is to create symmetries between actions and consequences. By assuming risk, individuals and systems become antifragile, growing from exposure to challenges.",
+                                "rating": 5,
+                                "image": "pictures/skin_in_the_game.jpg"
+                            },
+                            {
+                                "title": "Understanding Michael Porter",
+                                "author": "Joan Magretta",
+                                "year": 2011,
+                                "description": "Being the best is not optimal. Being different is the answer. Each choice must seek to create a unique value proposition.",
+                                "rating": 4,
+                                "image": "pictures/understanding_michael_porter.jpg"
+                            },
+                            {
+                                "title": "Good Strategy Bad Strategy",
+                                "author": "Richard Rumelt",
+                                "year": 2011,
+                                "description": "Strategy is about directing focus through deliberate choices. These decisions should align with the company’s resources and positioning, while aiming to differentiate in order to capture maximum value.",
+                                "rating": 4,
+                                "image": "pictures/good_strategy_bad_strategy.jpg"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Bitcoin",
+                        "books": [
+                            {
+                                "title": "The Bitcoin Standard",
+                                "author": "Saifedean Ammous",
+                                "year": 2018,
+                                "description": "Saifedean analyses Bitcoin as a legitimate alternative to current and historical stores of value, which he considers flawed.",
+                                "rating": 4,
+                                "image": "pictures/the_bitcoin_standard.jpg"
+                            },
+                            {
+                                "title": "Mastering Bitcoin",
+                                "author": "Andreas M. Antonopoulos",
+                                "year": 2014,
+                                "description": "This is a technical book which explains asymmetric cryptography, structure of transactions, blocks, mempool and mining, node validation, wallets…",
+                                "rating": 4,
+                                "image": "pictures/mastering_bitcoin.jpg"
+                            },
+                            {
+                                "title": "The Fiat Standard",
+                                "author": "Saifedean Ammous",
+                                "year": 2021,
+                                "description": "Fiat money fosters a short-term preference, while civilization thrives on a long-term perspective.",
+                                "rating": 4,
+                                "image": "pictures/the_fiat_standard.jpg"
+                            },
+                            {
+                                "title": "The Sovereign Individual",
+                                "author": "James Dale Davidson, William Rees-Mogg",
+                                "year": 1997,
+                                "description": "History through the lens of cost-effectiveness. Current technological advancements could shift the balance of power from centralized states to empowered individuals.",
+                                "rating": 4,
+                                "image": "pictures/the_sovereign_individual.jpg"
+                            },
+                            {
+                                "title": "La Filosofía de Bitcoin",
+                                "author": "Álvaro D. María",
+                                "year": 2022,
+                                "description": "Bitcoin from a libertarian standpoint. Spanish author.",
+                                "rating": 3,
+                                "image": "pictures/la_filosofia_de_bitcoin.jpg"
+                            },
+                            {
+                                "title": "Satoshi's book",
+                                "author": "Phil Champagne",
+                                "year": 2014,
+                                "description": "Satoshi's mails and public posts.",
+                                "rating": 4,
+                                "image": "pictures/satoshis_book.jpg"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Psychology",
+                        "books": [
+                            {
+                                "title": "Man's Search for Meaning",
+                                "author": "Viktor Frankl",
+                                "year": 1946,
+                                "description": "A psychiatrist’s testimony on how having a sense of purpose can help one endure life’s greatest challenges—in his case, during his time in Auschwitz and other concentration camps.",
+                                "rating": 3,
+                                "image": "pictures/mans_search_for_meaning.jpg"
+                            },
+                            {
+                                "title": "Cartas a Lucilio",
+                                "author": "Séneca",
+                                "year": "63-65 d.C.",
+                                "description": "Stoic advice from Seneca around friendship, love and luxury, and facing death.",
+                                "rating": 4,
+                                "image": "pictures/cartas_a_lucilio.jpg"
+                            },
+                            {
+                                "title": "How to Win Friends and Influence People",
+                                "author": "Dale Carnegie",
+                                "year": 1936,
+                                "description": "Carnegie emphasizes being genuine and empathetic to build strong relationships.",
+                                "rating": 4,
+                                "image": "pictures/how_to_win_friends.jpg"
+                            },
+                            {
+                                "title": "Las 48 leyes del poder",
+                                "author": "Robert Greene",
+                                "year": 1998,
+                                "description": "Rules around power, influence and manipulation. It´s important to understand these rules because as Ayn Rand said 'You can ignore reality, but you cannot ignore the consequences of ignoring reality.'",
+                                "rating": 5,
+                                "image": "pictures/las_48_leyes_del_poder.jpg"
+                            },
+                            {
+                                "title": "12 Rules for Life",
+                                "author": "Jordan Peterson",
+                                "year": 2018,
+                                "description": "Jesus G Maestro explains this book better than anyone. Nothing else can be added on the topic.",
+                                "rating": 2,
+                                "image": "pictures/12_rules_for_life.jpg"
+                            },
+                            {
+                                "title": "Crimen y castigo",
+                                "author": "Fídor Dostoievski",
+                                "year": 1866,
+                                "description": "Our brains are designed to judge our immoral actions and act as prisons. Peace of mind requires morality.",
+                                "rating": 4,
+                                "image": "pictures/crimen_y_castigo.jpg"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Philosophy, Politics, and Military Strategies",
+                        "books": [
+                            {
+                                "title": "Camino de servidumbre",
+                                "author": "Friedrich Hayek",
+                                "year": 1944,
+                                "description": "Freedom is not only economic prosperity but also the right thing. Cultural battle at its finest.",
+                                "rating": 4,
+                                "image": "pictures/camino_de_servidumbre.jpg"
+                            },
+                            {
+                                "title": "El príncipe",
+                                "author": "Nicolás Maquiavelo",
+                                "year": 1532,
+                                "description": "The Bible of politics. It emphasizes that morals are not always practical when the primary objective is to maintain power. Still applicable.",
+                                "rating": 4,
+                                "image": "pictures/el_principe.jpg"
+                            },
+                            {
+                                "title": "The art of war",
+                                "author": "Sun Tzu",
+                                "year": "siglo V a.C.",
+                                "description": "On warfare, morale, leadership, timing, flexibility, deception, and tactical intelligence. 'If you know the enemy and know yourself, you need not fear the result of a hundred battles' - Sun Tzu.",
+                                "rating": 5,
+                                "image": "pictures/the_art_of_war.jpg"
+                            },
+                            {
+                                "title": "Public International Law",
+                                "author": "Alina Kaczorowska",
+                                "year": 2015,
+                                "description": "Understanding this book was mandatory for my law degree but I enjoyed analysing how Public International conflicts are solved.",
+                                "rating": 3,
+                                "image": "pictures/public_international_law.jpg"
+                            },
+                            {
+                                "title": "Identidades asesinas",
+                                "author": "Amin Maalouf",
+                                "year": 1998,
+                                "description": "Identities are multidimensional, made up of various cultural, religious, and social elements. When people focus solely on one aspect of their identity, it can lead to intolerance and conflict.",
+                                "rating": 3,
+                                "image": "pictures/identidades_asesinas.jpg"
+                            },
+                            {
+                                "title": "El naufragio de las civilizaciones",
+                                "author": "Amin Maalouf",
+                                "year": 2019,
+                                "description": "History of the Middle East (specifically Lebanon) teaches us that external intervention and extremism can cause the decline of a previously prosperous civilization.",
+                                "rating": 3,
+                                "image": "pictures/el_naufragio_de_las_civilizaciones.jpg"
+                            }
+                        ]
+                    },
+                    {
+                        "name": "Historical Novel",
+                        "books": [
+                            {
+                                "title": "Africanus: El hijo del cónsul",
+                                "author": "Santiago Posteguillo",
+                                "year": 2006,
+                                "description": "Recoge momentos inolvidables como el paso por los Alpes del ejército de Aníbal, la batalla de Cannae y el asedio de Cartago Nova.",
+                                "rating": 4,
+                                "image": "pictures/africanus.jpg"
+                            },
+                            {
+                                "title": "Las legiones malditas",
+                                "author": "Santiago Posteguillo",
+                                "year": 2008,
+                                "description": "Si Aníbal hubiera ganado la batalla de Zama, sería quizás mejor general que Alejandro. Pero ese día ganó Publio Cornelio Escipión con las Legiones Malditas VI y VII.",
+                                "rating": 5,
+                                "image": "pictures/las_legiones_malditas.jpg"
+                            },
+                            {
+                                "title": "La traición de Roma",
+                                "author": "Santiago Posteguillo",
+                                "year": 2009,
+                                "description": "Escipión el Africano y Escipión el Asiático pudieron incluso con los catafractos seleúcidas. Mientras tanto Catón el viejo se hacía fuerte en el senado.",
+                                "rating": 4,
+                                "image": "pictures/la_traicion_de_roma.jpg"
+                            },
+                            {
+                                "title": "Los asesinos del emperador",
+                                "author": "Santiago Posteguillo",
+                                "year": 2011,
+                                "description": "I. Nero; II. Galba; III. Otho; IV. Vitellius; V. Vespasianus; VI. Titus; VII. Domitianus; VIII. Nerva; IX. Traianus.",
+                                "rating": 3,
+                                "image": "pictures/los_asesinos_del_emperador.jpg"
+                            },
+                            {
+                                "title": "Circo Máximo",
+                                "author": "Santiago Posteguillo",
+                                "year": 2013,
+                                "description": "Trajano contra los dacios liderados por Decébalo.",
+                                "rating": 4,
+                                "image": "pictures/circo_maximo.jpg"
+                            },
+                            {
+                                "title": "La legión perdida",
+                                "author": "Santiago Posteguillo",
+                                "year": 2016,
+                                "description": "Currently reading.",
+                                "rating": 0,
+                                "image": "pictures/la_legion_perdida.jpg"
+                            },
+                            {
+                                "title": "Roma soy yo",
+                                "author": "Santiago Posteguillo",
+                                "year": 2022,
+                                "description": "Infancia de Cayo Julio César y las épicas batallas de su tío Cayo Mario.",
+                                "rating": 4,
+                                "image": "pictures/roma_soy_yo.jpg"
+                            },
+                            {
+                                "title": "Maldita Roma",
+                                "author": "Santiago Posteguillo",
+                                "year": 2023,
+                                "description": "Historia del triunvirato y de las conspiraciones de Catón el Joven y Cicerón.",
+                                "rating": 3,
+                                "image": "pictures/maldita_roma.jpg"
+                            },
+                            {
+                                "title": "Juan Belmonte, matador de toros",
+                                "author": "Manuel Chaves Nogales",
+                                "year": 1935,
+                                "description": "'Al miedo yo le venzo o, al menos, le contengo a fuerza de dialéctica. Es un diálogo incoherente, como el de un loco con un ser sobrenatural.' - Juan Belmonte.",
+                                "rating": 4,
+                                "image": "pictures/juan_belmonte.jpg"
+                            }
+                        ]
+                    }
+                ]
+            };
+
+            const booksContainer = document.getElementById('books-container');
+            data.categories.forEach(category => {
+                const categoryElement = document.createElement('div');
+                categoryElement.classList.add('category');
+                const categoryTitle = document.createElement('h2');
+                categoryTitle.textContent = category.name;
+                categoryElement.appendChild(categoryTitle);
+
+                const bookGrid = document.createElement('div');
+                bookGrid.classList.add('book-grid');
+                category.books.forEach(book => {
+                    const bookElement = document.createElement('div');
+                    bookElement.classList.add('book');
+
+                    const bookContent = document.createElement('div');
+                    bookContent.classList.add('book-content');
+
+                    const bookImage = document.createElement('img');
+                    bookImage.src = book.image;
+                    bookImage.alt = book.title;
+                    bookContent.appendChild(bookImage);
+
+                    const bookDetails = document.createElement('div');
+                    const bookTitle = document.createElement('h3');
+                    bookTitle.textContent = book.title;
+                    bookDetails.appendChild(bookTitle);
+                    const bookAuthor = document.createElement('p');
+                    bookAuthor.textContent = `${book.author} (${book.year})`;
+                    bookDetails.appendChild(bookAuthor);
+                    bookContent.appendChild(bookDetails);
+
+                    bookElement.appendChild(bookContent);
+
+                    // Añadir tooltip personalizado
+                    const dropdown = document.createElement('div');
+                    dropdown.classList.add('dropdown');
+                    const bookDescription = document.createElement('p');
+                    bookDescription.textContent = book.description;
+                    dropdown.appendChild(bookDescription);
+
+                    // Añadir valoración con estrellas
+                    const ratingElement = document.createElement('div');
+                    ratingElement.classList.add('rating');
+                    for (let i = 1; i <= 5; i++) {
+                        const star = document.createElement('span');
+                        star.classList.add('star');
+                        if (i <= Math.floor(book.rating)) {
+                            star.innerHTML = '★';
+                        } else if (i === Math.ceil(book.rating) && !Number.isInteger(book.rating)) {
+                            star.innerHTML = '&#9733;';
+                            star.style.clipPath = 'inset(0 50% 0 0)';
+                        } else {
+                            star.innerHTML = '☆';
+                        }
+                        ratingElement.appendChild(star);
+                    }
+                    const ratingValue = document.createElement('span');
+                    ratingValue.classList.add('rating-value');
+                    ratingValue.textContent = `(${book.rating})`;
+                    ratingElement.appendChild(ratingValue);
+                    dropdown.appendChild(ratingElement);
+
+                    bookElement.appendChild(dropdown);
+
+                    bookGrid.appendChild(bookElement);
+                });
+                categoryElement.appendChild(bookGrid);
+                booksContainer.appendChild(categoryElement);
+            });
+        }
+    </script>
+</body>
+</html>
